@@ -7,13 +7,33 @@ output:
 
 
 ## Loading and preprocessing the data
-
+```{r, echo=TRUE}
+activity <- read.csv(unz('activity.zip', 'activity.csv'), sep = ',')
+activity$date <- as.Date(activity$date, format = '%Y-%m-%d')
+```
 
 
 ## What is mean total number of steps taken per day?
 
+```{r, echo=TRUE}
+library(dplyr)
+activity_bydate <- activity %>%
+        group_by(date) %>%
+        summarise_all(sum)
+library(ggplot2)
+g <- ggplot(data = activity_bydate, aes(x = date, y = steps))
+g + geom_bar(stat = 'identity')
 
+```
 
+### Mean total number of steps taken per day
+```{r}
+mean(activity_bydate$steps, na.rm = TRUE)
+```
+### Median total number of steps taken per day
+```{r}
+median(activity_bydate$steps, na.rm = TRUE)
+```
 ## What is the average daily activity pattern?
 
 
