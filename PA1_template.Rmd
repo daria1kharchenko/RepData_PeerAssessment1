@@ -54,7 +54,36 @@ activity_byinterval[which.max(activity_byinterval$steps),1]
 
 
 ## Imputing missing values
+### Total number of missing values
+```{r}
+sum(is.na(activity))
+```
+### Filling in all of the missing values in the dataset by the median for that 5-minute interval and creating new dataset
+```{r}
+activity_filled_NA <- activity %>%
+        group_by(interval)%>%
+        mutate(steps = ifelse(is.na(steps), median(steps, na.rm = TRUE), steps))
+```
+### Histogram of the total number of steps taken each day after imputing missing values
 
+```{r, echo=TRUE}
+library(dplyr)
+activity_bydate_imput <- activity_filled_NA %>%
+        group_by(date) %>%
+        summarise_all(sum)
+library(ggplot2)
+g <- ggplot(data = activity_bydate_imput, aes(x = date, y = steps))
+g + geom_bar(stat = 'identity')
 
+```
 
+### Mean total number of steps taken per day after imputing
+```{r}
+mean(activity_bydate_imput$steps)
+```
+### Median total number of steps taken per day after imputing
+```{r}
+median(activity_bydate_imput$steps)
+```
+ As we can see mean and median numbers after imputing are lover then before. 
 ## Are there differences in activity patterns between weekdays and weekends?
