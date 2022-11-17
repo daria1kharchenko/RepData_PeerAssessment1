@@ -36,6 +36,21 @@ median(activity_bydate$steps, na.rm = TRUE)
 ```
 ## What is the average daily activity pattern?
 
+```{r, echo=TRUE}
+library(dplyr)
+activity_byinterval <- activity %>%
+        group_by(interval) %>%
+        summarise_all(mean, na.rm = TRUE)
+library(ggplot2)
+g <- ggplot(data = activity_byinterval, aes(x = interval, y = steps))
+g + geom_line()
+
+```
+
+### Maximum number of steps 
+```{r}
+activity_byinterval[which.max(activity_byinterval$steps),1]
+```
 
 
 ## Imputing missing values
